@@ -1,4 +1,4 @@
-# Greenify
+# Greenicle
 
 This is the source code for our U of T Hacks VI Project!
 Greenify aims to empower drivers to take responsibility for their impact on our environment by providing insights on user's driving data and CO2 emissions.
