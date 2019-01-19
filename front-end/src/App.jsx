@@ -57,11 +57,10 @@ class App extends Component {
   }
 
   render() {
-    return (
-      // Object.keys(this.state.vehicle).length !== 0 ? (
+    return Object.keys(this.state.vehicle).length !== 0 ? (
       <Dashboard info={this.state.vehicle} odometer={this.state.odometer} />
-      // ) : (
-      // <Connect onClick={this.authorize} />
+    ) : (
+      <Connect onClick={this.authorize} />
     );
   }
 }
