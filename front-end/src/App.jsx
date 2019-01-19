@@ -10,7 +10,8 @@ class App extends Component {
     super(props);
 
     this.state = {
-      vehicle: {}
+      vehicle: {},
+      odometer: {}
     };
 
     this.authorize = this.authorize.bind(this);
@@ -19,7 +20,12 @@ class App extends Component {
     this.smartcar = new Smartcar({
       clientId: process.env.REACT_APP_CLIENT_ID,
       redirectUri: process.env.REACT_APP_REDIRECT_URI,
-      scope: ["read_vehicle_info"],
+      scope: [
+        "read_vehicle_info",
+        "read_odometer",
+        "read_location",
+        "read_vin"
+      ],
       testMode: true,
       onComplete: this.onComplete
     });
@@ -33,6 +39,16 @@ class App extends Component {
       })
       .then(res => {
         this.setState({ vehicle: res.data });
+      })
+      .then(_ => {
+        return axios.get(
+          `${process.env.REACT_APP_SERVER}/odometer?vehicleId=${
+            this.state.vehicle.id
+          }`
+        );
+      })
+      .then(res => {
+        this.setState({ odometer: res.data });
       });
   }
 
@@ -42,7 +58,7 @@ class App extends Component {
 
   render() {
     return Object.keys(this.state.vehicle).length !== 0 ? (
-      <Vehicle info={this.state.vehicle} />
+      <Vehicle info={this.state.vehicle} odometer={this.state.odometer} />
     ) : (
       <Connect onClick={this.authorize} />
     );
