@@ -10,8 +10,7 @@ class App extends Component {
     super(props);
 
     this.state = {
-      vehicle: {},
-      odometer: {}
+      vehicle: {}
     };
 
     this.authorize = this.authorize.bind(this);
@@ -39,16 +38,6 @@ class App extends Component {
       })
       .then(res => {
         this.setState({ vehicle: res.data });
-      })
-      .then(_ => {
-        return axios.get(
-          `${process.env.REACT_APP_SERVER}/odometer?vehicleId=${
-            this.state.vehicle.id
-          }`
-        );
-      })
-      .then(res => {
-        this.setState({ odometer: res.data });
       });
   }
 
@@ -58,7 +47,7 @@ class App extends Component {
 
   render() {
     return Object.keys(this.state.vehicle).length !== 0 ? (
-      <Dashboard info={this.state.vehicle} odometer={this.state.odometer} />
+      <Dashboard info={this.state.vehicle} />
     ) : (
       <Connect onClick={this.authorize} />
     );
