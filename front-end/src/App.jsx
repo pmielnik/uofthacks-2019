@@ -3,7 +3,7 @@ import axios from "axios";
 import Smartcar from "@smartcar/auth";
 
 import Connect from "./components/Connect";
-import Vehicle from "./components/Vehicle";
+import Dashboard from "./components/Dashboard";
 
 class App extends Component {
   constructor(props) {
@@ -58,7 +58,7 @@ class App extends Component {
 
   render() {
     return Object.keys(this.state.vehicle).length !== 0 ? (
-      <Vehicle info={this.state.vehicle} odometer={this.state.odometer} />
+      <Dashboard info={this.state.vehicle} odometer={this.state.odometer} />
     ) : (
       <Connect onClick={this.authorize} />
     );
