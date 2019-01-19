@@ -1,31 +1,32 @@
 import React from "react";
+import Rating from "../assets/rating.png";
+import "./Dashboard.css";
 
 export default ({ info, odometer }) => (
-  <React.Fragment>
-    <table>
-      <thead>
-        <tr>
-          <th>Vehicle ID</th>
-          <th>Vehicle Make</th>
-          <th>Vehicle Model</th>
-          <th>Vehicle Year</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{info.id}</td>
-          <td>{info.make}</td>
-          <td>{info.model}</td>
-          <td>{info.year}</td>
-        </tr>
-      </tbody>
-    </table>
-    <button
-      onClick={() => {
-        console.log(odometer);
-      }}
-    >
-      Odometr
-    </button>
-  </React.Fragment>
+  <div className="app-page">
+    <div className="app-navbar">
+      <h1 className="app-logo">
+        <span className="title-green-part">Green</span>icle
+      </h1>
+      <div className="nav-user">
+        <p>Hi, user@tesla.ca</p>
+        <a className="nav-logout" href="/">
+          <b>Logout</b>
+        </a>
+        <div className="user-rating">
+          Community rating:{" "}
+          <img className="rating-img" src={Rating} alt="Community rating" />
+        </div>
+      </div>
+    </div>
+    <div className="dashboard">
+      <button
+        onClick={() => {
+          console.log(odometer);
+        }}
+      >
+        Odometr
+      </button>
+    </div>
+  </div>
 );
