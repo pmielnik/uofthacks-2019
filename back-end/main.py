@@ -18,6 +18,14 @@ client = smartcar.AuthClient(
     test_mode=True
 )
 
+#@app.route('/newuser', methods=['POST'])
+#def newuser():
+#    firstname = request.form.get('firstname')
+#    lastname = request.form.get('lastname')
+#    username = request.form.get('user')
+#    vehicleId = request.form.get('vehicleId')
+
+    # add user info to database
 
 @app.route('/login', methods=['GET'])
 def login():
@@ -52,6 +60,26 @@ def vehicle():
     print(info)
 
     return jsonify(info)
+
+@app.route('/odometer', methods=['GET'])
+def odometer():
+    # access our global variable to retrieve our access tokens
+    global access
+
+    vehicleId = request.form.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    odometer = vehicle.odometer()
+
+    return jsonify(odometer)
+
+@app.route('/location', methods=['GET'])
+def location():
+ #   vehicleId = request.form.get('vehicleId')
+    return "hello"
+
+
+# odometer update every 24hrs
+# location update every 5mins
 
 
 if __name__ == '__main__':
