@@ -96,7 +96,7 @@ def co2emission():
 
     return jsonify(CO2emission = emission)
 
-@app.route('treestoplant', methods=['GET'])
+@app.route('/treestoplant', methods=['GET'])
 def treestoplant():
     global access
     
@@ -110,7 +110,7 @@ def treestoplant():
 
     return jsonify(TreesToPlant = trees)
 
-@app.route('lightbulbs', methods=['GET'])
+@app.route('/lightbulbs', methods=['GET'])
 def lightbulbs():
     global access
     
