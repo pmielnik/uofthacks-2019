@@ -1,5 +1,5 @@
 {
-  "name": "getting-started-javascript-sdk-react",
+  "name": "uofthacks-2019",
   "version": "1.0.0",
   "dependencies": {
     "@smartcar/auth": "^2.0.0",
