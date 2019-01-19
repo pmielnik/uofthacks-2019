@@ -1,7 +1,7 @@
 import smartcar
 from flask import Flask, redirect, request, jsonify
 from flask_cors import CORS
-
+import requests
 import os
 
 app = Flask(__name__)
@@ -18,13 +18,18 @@ client = smartcar.AuthClient(
     test_mode=True
 )
 
+# Bing search key
+subscription_key = 'cdcce10aafc748929f842db03f1c0390'
+assert subscription_key
+bingSearchUrl = "https://api.cognitive.microsoft.com/bing/v7.0/images/search"
+
 # TODO: determine if this is necessary
 #@app.route('/newuser', methods=['POST'])
 #def newuser():
-#    firstname = request.form.get('firstname')
-#    lastname = request.form.get('lastname')
-#    username = request.form.get('user')
-#    vehicleId = request.form.get('vehicleId')
+#    firstname = request.args.get('firstname')
+#    lastname = request.args.get('lastname')
+#    username = request.args.get('user')
+#    vehicleId = request.args.get('vehicleId')
 
     # add user info to database
 
@@ -123,6 +128,20 @@ def lightbulbs():
     lightbulbs = emission * 63
 
     return jsonify(LightBulbHours = lightbulbs)
+
+@app.route('/get-image', methods=['GET'])
+def getimage():
+    carModel = request.args.get('carModel')
+
+    headers = {"Ocp-Apim-Subscription-Key" : subscription_key}
+    params  = {"q": carModel}                               # the cursed search engine: , "license": "public", "imageType": "photo"}
+    response = requests.get(bingSearchUrl, headers=headers, params=params)
+    response.raise_for_status()
+    search_results = response.json()
+
+    image = search_results["value"][0]["thumbnailUrl"]
+
+    return jsonify(imageURL = image)
 
 
 # odometer update every 24hrs
