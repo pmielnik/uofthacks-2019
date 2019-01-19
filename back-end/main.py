@@ -14,7 +14,7 @@ client = smartcar.AuthClient(
     client_id=os.environ.get('CLIENT_ID'),
     client_secret=os.environ.get('CLIENT_SECRET'),
     redirect_uri=os.environ.get('REDIRECT_URI'),
-    scope=['read_vehicle_info'],
+    scope=['read_vehicle_info', 'read_odometer', 'read_location', 'read_vin'],
     test_mode=True
 )
 
@@ -66,7 +66,8 @@ def odometer():
     # access our global variable to retrieve our access tokens
     global access
 
-    vehicleId = request.form.get('vehicleId')
+    vehicleId = request.args.get('vehicleId')
+    print(vehicleId)
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()
 
