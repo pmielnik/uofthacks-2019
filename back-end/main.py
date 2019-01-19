@@ -18,6 +18,7 @@ client = smartcar.AuthClient(
     test_mode=True
 )
 
+# TODO: determine if this is necessary
 #@app.route('/newuser', methods=['POST'])
 #def newuser():
 #    firstname = request.form.get('firstname')
@@ -67,7 +68,6 @@ def odometer():
     global access
 
     vehicleId = request.args.get('vehicleId')
-    print(vehicleId)
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()
 
@@ -75,8 +75,54 @@ def odometer():
 
 @app.route('/location', methods=['GET'])
 def location():
- #   vehicleId = request.form.get('vehicleId')
-    return "hello"
+    global access
+
+    vehicleId = request.args.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    location = vehicle.location()
+
+    return jsonify(location)
+
+@app.route('/co2emission', methods=['GET'])
+def co2emission():
+    global access
+
+    vehicleId = request.args.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    odometer = vehicle.odometer()['data']
+
+    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
+    emission = odometer/10000 * mpg
+
+    return jsonify(CO2emission = emission)
+
+@app.route('treestoplant', methods=['GET'])
+def treestoplant():
+    global access
+    
+    vehicleId = request.args.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    odometer = vehicle.odometer()['data']
+
+    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
+    emission = odometer/10000 * mpg
+    trees = emission * 0.2
+
+    return jsonify(TreesToPlant = trees)
+
+@app.route('lightbulbs', methods=['GET'])
+def lightbulbs():
+    global access
+    
+    vehicleId = request.args.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    odometer = vehicle.odometer()['data']
+
+    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
+    emission = odometer/10000 * mpg
+    lightbulbs = emission * 63
+
+    return jsonify(LightBulbHours = lightbulbs)
 
 
 # odometer update every 24hrs
