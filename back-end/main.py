@@ -4,8 +4,29 @@ from flask_cors import CORS
 
 import os
 
+import azure.cosmos.documents as documents
+import azure.cosmos.cosmos_client as cosmos_client
+import azure.cosmos.errors as errors
+import datetime
+
+import samples.Shared.config as cfg
+
 app = Flask(__name__)
 CORS(app)
+
+#print("connecting to database.....")
+
+HOST ='https://greenicle.documents.azure.com:443/'
+MASTER_KEY = 'G0Mmi0w1guwj0o34EfJnpadk8qf9DFIP2kM3rMbJ5KBP2RX1WBgH3EF2SpRnHvDXSmQsPTQTMCjeVNWR7oWKtg=='
+DATABASE_ID = 'greenicle'
+CARS_COLLECTION_ID = 'cars'
+USERS_COLLECTION_ID = 'users'
+
+database_link = 'dbs/' + DATABASE_ID
+cars_collection_link = database_link + '/colls/' + CARS_COLLECTION_ID
+users_collection_link = database_link + '/colls/' + USERS_COLLECTION_ID
+
+db_client=cosmos_client.CosmosClient(HOST, {'masterKey': MASTER_KEY} )
 
 # global variable to save our access_token
 access = None
@@ -18,20 +39,24 @@ client = smartcar.AuthClient(
     test_mode=True
 )
 
-# TODO: determine if this is necessary
-#@app.route('/newuser', methods=['POST'])
-#def newuser():
-#    firstname = request.form.get('firstname')
-#    lastname = request.form.get('lastname')
-#    username = request.form.get('user')
-#    vehicleId = request.form.get('vehicleId')
+@app.route('/newuser', methods=['POST'])
+def newuser():
+   username = request.form.get('username')
+   password = request.form.get('password')
+   vehicleId = request.form.get('vehicleId') #from smartcar?
 
-    # add user info to database
+   userData=createUserData(username,password,vehicleId)
+   db_client.CreateItem(users_collection_link, userData)
+
+    #add user info to database
 
 @app.route('/login', methods=['GET'])
 def login():
     auth_url = client.get_auth_url()
     return redirect(auth_url)
+
+def returnMPG():
+    return
 
 
 @app.route('/exchange', methods=['GET'])
@@ -91,8 +116,8 @@ def co2emission():
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
 
-    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
-    emission = odometer/10000 * mpg
+    mpg = getMPG(vehicleId)
+    emission = (odometer/mpg*8887)/(1000000.0)
 
     return jsonify(CO2emission = emission)
 
@@ -104,8 +129,8 @@ def treestoplant():
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
 
-    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
-    emission = odometer/10000 * mpg
+    mpg = getMPG(vehicleId)
+    emission = (odometer/mpg*8887)/(1000000.0)
     trees = emission * 0.2
 
     return jsonify(TreesToPlant = trees)
@@ -118,8 +143,8 @@ def lightbulbs():
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
 
-    mpg = 1 # TODO: SQL querey to find mpg related to vehicle ID
-    emission = odometer/10000 * mpg
+    mpg = getMPG(vehicleId)
+    emission = (odometer/mpg*8887)/(1000000.0)
     lightbulbs = emission * 63
 
     return jsonify(LightBulbHours = lightbulbs)
@@ -128,6 +153,58 @@ def lightbulbs():
 # odometer update every 24hrs
 # location update every 5mins
 
+def createUserData(username,password,vehicleid):
+    data={
+        'id' : username,
+        'password' : password,
+        'cars' : [
+            {'vehicleid' : vehicleid}
+        ]
+    }
+    return data
+
+def getMPG(carid):
+    cars={
+        '2018 Audi A4' :'27.8',
+        '2017 Audi A8' : '22.0',
+        '2017 Audi Q5' : '21.5',
+        '2017 BMW 3 Series' : '27.4',
+        '2017 BMW X5' : '20.5',
+        '2018 BMW i3' : '117.7',
+        '2018 Buick Verano' : '24.0',
+        '2017 Buick LaCrosse' : '24.0',
+        '2018 Buick Enclave' : '17.5',
+        '2018 Cadillac ATS' : '23.0',
+        '2017 Cadillac CTS' : '19.7',
+        '2018 Cadillac Escalade' : '17.0',
+        '2018 Chevrolet Traverse' : '17.5',
+        '2018 Chevrolet Volt' : '106.0',
+        '2017 Chevrolet Equinox' : '22.3',
+        '2018 Chrysler Pacifica' : '22.0',
+        '2017 Chrysler 300' : '23.0',
+        '2015 Dodge Journey' : '23.0',
+        '2017 Dodge Challenger' : '18.0',
+        '2016 Dodge Charger' : '22.0',
+        '2017 GMC Acadia' : '20.3',
+        '2018 GMC Yukon' : '17.9',
+        '2018 GMC Sierra' : '22.0',
+        '2018 Jeep Wrangler' : '19.0',
+        '2016 Jeep Cherokee' : '22.0',
+        '2017 Jeep Compass' : '22.0',
+        '2017 Lexus RX ' : '25.0',
+        '2018 Lexus ES' : '24.0',
+        '2017 Lexus IS' : '23.0',
+        '2018 RAM 2500' : '15.0',
+        '2017 RAM 1500' : '14.5',
+        '2019 RAM 3500' : '14.6',
+        '2017 Tesla Model X' : '89.0',
+        '2018 Tesla Model 3' : '126.0',
+        '2016 Tesla Model S' : '99.0',
+        '2018 Volkswagen Golf' : '33.0',
+        '2017 Volkswagen Beetle' : '28.0',
+        '2018 Volkswagen Tiguan' : '22.0'
+    }
+    return (float)(cars[carid])
 
 if __name__ == '__main__':
     app.run(port=8000)
