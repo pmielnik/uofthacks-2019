@@ -142,7 +142,7 @@ def treestoplant():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = year + " " + make + " " + model
+    carId = (str)year + " " + (str)make + " " + (str)model
 
     mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
@@ -161,7 +161,7 @@ def lightbulbs():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = year + " " + make + " " + model
+    carId = (str)year + " " + (str)make + " " + (str)model
 
     mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
@@ -219,7 +219,7 @@ def price():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = year + " " + make + " " + model
+    carId = (str)year + " " + (str)make + " " + (str)model
 
     return jsonify(price = resaleValue(odometer, getPrice(carId)))
 
