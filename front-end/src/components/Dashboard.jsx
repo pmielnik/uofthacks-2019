@@ -19,11 +19,13 @@ export default class Dashboard extends React.Component {
       treesToPlant: 0,
       odometer: 0,
       imgSrc: null,
+      resaleValue: 0,
       filter: "24 hours",
       location: { lat: 0, lon: 0 }
     };
 
     this.getEmission = this.getEmission.bind(this);
+    this.getPrice = this.getPrice.bind(this);
     this.getLightBulb = this.getLightBulb.bind(this);
     this.getOdometer = this.getOdometer.bind(this);
     this.getLocation = this.getLocation.bind(this);
@@ -40,7 +42,19 @@ export default class Dashboard extends React.Component {
     this.getTrees(this.props.info.id);
     this.getLightBulb(this.props.info.id);
     this.getLocation(this.props.info.id);
+    this.getPrice(this.props.info.id);
     this.generateImageURL(carName);
+  }
+
+  getPrice(id) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/price?vehicleId=${id}`)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          resaleValue: res.data.price.toFixed(0)
+        });
+      });
   }
 
   generateImageURL(name) {
@@ -189,7 +203,9 @@ export default class Dashboard extends React.Component {
                     <td className="metric-title">
                       <b>Estimated Trade-in Value</b>
                     </td>
-                    <td className="metric">$ 10,000</td>
+                    <td className="metric">
+                      ${this.state.resaleValue && this.state.resaleValue}
+                    </td>
                   </tr>
                 </tbody>
               </table>
