@@ -182,11 +182,17 @@
 .eco-metrics {
   border: 1px lightgray solid;
   border-radius: 15px;
+  cursor: default;
   width: 80%;
   height: 125px;
   display: flex;
   flex-direction: row;
   align-items: center;
+  z-index: 5;
+}
+
+.eco-metrics:hover {
+  border: 1px #3aee78 solid;
 }
 
 .small-col {
