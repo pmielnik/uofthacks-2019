@@ -1,25 +1,35 @@
 import React from "react";
 import axios from "axios";
+import TimeFilter from "./TimeFilter";
 import Rating from "../assets/rating.png";
 import "./Dashboard.css";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { odometer: 0 };
+    this.state = { odometer: 0, filter: "24 hours" };
 
     this.getOdometer = this.getOdometer.bind(this);
+    this.setFilter = this.setFilter.bind(this);
   }
+
   componentDidMount() {
     this.getOdometer(this.props.info.id);
   }
+
   getOdometer(id) {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/odometer?vehicleId=${id}`)
       .then(res => {
         console.log(res.data);
-        this.setState({ odometer: res.data.data.distance });
+        this.setState({ odometer: res.data.data.distance.toFixed(0) });
       });
+  }
+
+  setFilter(filter) {
+    this.setState({
+      filter
+    });
   }
 
   render() {
@@ -63,9 +73,7 @@ export default class Dashboard extends React.Component {
                     <td className="metric-title">
                       <b>Mileage</b>
                     </td>
-                    <td className="metric">
-                      {this.state.odometer.toFixed(0)} km
-                    </td>
+                    <td className="metric">{this.state.odometer} km</td>
                   </tr>
                   <tr>
                     <td className="metric-title">
@@ -83,13 +91,39 @@ export default class Dashboard extends React.Component {
               </table>
             </div>
           </div>
-          {/* <button
-        onClick={() => {
-          console.log(odometer);
-        }}
-      >
-        Odometr
-      </button> */}
+          <div className="summary">
+            <p className="dashboard-title">
+              <b>Summary Statistics</b>
+            </p>
+            <div className="time-stats">
+              <div className="time-filter-container">
+                <p>
+                  <b>Time filter</b>
+                </p>
+                <TimeFilter
+                  title="Last 24 Hours"
+                  id="daily-filter"
+                  onClick={() => {
+                    this.setFilter("24 hours");
+                  }}
+                  checked
+                />
+                <TimeFilter
+                  title="Last week"
+                  id="weekly-filter"
+                  onClick={() => {
+                    this.setFilter("week");
+                  }}
+                />
+              </div>
+              <div className="filtered-mileage">
+                You've driven <b>{this.state.odometer}</b> kilometers in the
+                past {this.state.filter}.
+              </div>
+              <div className="timeline">Timeline</div>
+            </div>
+            <div className="eco-impact">Eco impact</div>
+          </div>
         </div>
       </div>
     );

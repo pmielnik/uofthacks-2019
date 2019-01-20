@@ -11,6 +11,7 @@ function TimeFilter(props) {
         name="radio"
         onClick={props.onClick}
         id={props.id}
+        defaultChecked={props.checked}
       />
       <label className="time-filter" for={props.id}>
         {props.title}
