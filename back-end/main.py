@@ -14,6 +14,8 @@ import samples.Shared.config as cfg
 app = Flask(__name__)
 CORS(app)
 
+KM_TO_MILES = 0.621371
+
 #print("connecting to database.....")
 
 HOST ='https://greenicle.documents.azure.com:443/'
@@ -119,7 +121,7 @@ def co2emission():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['distance']
+    odometer = vehicle.odometer()['data']['distance'] * KM_TO_MILES
     print(jsonify(odometer))
     info = vehicle.info()
     make = info['make'].upper()
@@ -142,7 +144,7 @@ def treestoplant():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['distance']
+    odometer = vehicle.odometer()['data']['distance'] * KM_TO_MILES
     info = vehicle.info()
     make = info['make'].upper()
     model = info['model'].upper()
@@ -161,7 +163,7 @@ def lightbulbs():
     
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['distance']
+    odometer = vehicle.odometer()['data']['distance'] * KM_TO_MILES
     info = vehicle.info()
     make = info['make'].upper()
     model = info['model'].upper()
@@ -219,7 +221,7 @@ def price():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['distance']
+    odometer = vehicle.odometer()['data']['distance'] * KM_TO_MILES
     info = vehicle.info()
     make = info['make'].upper()
     model = info['model'].upper()
