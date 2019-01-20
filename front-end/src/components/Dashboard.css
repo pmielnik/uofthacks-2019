@@ -99,6 +99,7 @@
 .metric-title {
     border: 1px lightgray solid;
     width: 55%;
+    height: 60px;
     border-radius: 8px;
 }
 
@@ -127,6 +128,14 @@
     border-top: 1px lightgray solid;
     width: 50%;
     height: 90%;
+}
+
+.metrics-container {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .dashboard-title {
@@ -159,4 +168,46 @@
 .timeline {
     text-align: left;
     padding-top: 5%;
+}
+
+.green {
+    color: #3aee78;
+}
+
+.eco-title {
+    font-size: calc(5px + 2vmin);
+    padding-top: 4%;
+}
+
+.eco-metrics {
+    border: 1px lightgray solid;
+    border-radius: 15px;
+    width: 80%;
+    height: 125px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.small-col {
+    padding-left: 5%;
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.small-col p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+}
+
+.small-icon {
+    width: 70px;
+    padding-left: 5%;
+}
+
+.metrics-val {
+    font-size: 20px;
 }

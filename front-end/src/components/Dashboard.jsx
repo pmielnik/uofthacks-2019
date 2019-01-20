@@ -3,7 +3,9 @@ import axios from "axios";
 import TimeFilter from "./TimeFilter";
 
 import Timeline from "./Timeline";
-
+import CarIcon from "../assets/car.svg";
+import BulbIcon from "../assets/bulb.svg";
+import TreeIcon from "../assets/tree.svg";
 import Rating from "../assets/rating.png";
 import "./Dashboard.css";
 
@@ -152,7 +154,49 @@ export default class Dashboard extends React.Component {
                 )}
               </div>
             </div>
-            <div className="eco-impact">Eco impact</div>
+            <div className="eco-impact">
+              <p className="green eco-title">
+                <b>Your footprint</b>
+              </p>
+              <div className="metrics-container">
+                <div className="eco-metrics">
+                  <img className="small-icon" src={CarIcon} alt="Car" />
+                  <div className="small-col">
+                    <p>Total CO2 emission (tonnes)</p>
+                    <p className="metrics-val">
+                      <b>2.88</b>
+                    </p>
+                    <p>
+                      <i>Community average 2.70</i>
+                    </p>
+                  </div>
+                </div>
+                <div className="eco-metrics">
+                  <img className="small-icon" src={BulbIcon} alt="Bulb" />
+                  <div className="small-col">
+                    <p>Light bulb (hours)</p>
+                    <p className="metrics-val">
+                      <b>181.8</b>
+                    </p>
+                    <p>
+                      <i>Community average 133</i>
+                    </p>
+                  </div>
+                </div>
+                <div className="eco-metrics">
+                  <img className="small-icon" src={TreeIcon} alt="Tree" />
+                  <div className="small-col">
+                    <p>Trees to offset</p>
+                    <p className="metrics-val">
+                      <b>0.6</b>
+                    </p>
+                    <p>
+                      <i>Plan a tree now!</i>
+                    </p>
+                  </div>{" "}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
