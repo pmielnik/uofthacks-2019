@@ -13,12 +13,14 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      emission: 0,
       odometer: 0,
       imgSrc: null,
       filter: "24 hours",
       location: { lat: 0, lon: 0 }
     };
 
+    this.getEmission = this.getEmission.bind(this);
     this.getOdometer = this.getOdometer.bind(this);
     this.getLocation = this.getLocation.bind(this);
     this.generateImageURL = this.generateImageURL.bind(this);
@@ -29,6 +31,7 @@ export default class Dashboard extends React.Component {
     let carName =
       this.props.info.make + " " + this.props.model + " " + this.props.year;
     this.getOdometer(this.props.info.id);
+    this.getEmission(this.props.info.id);
     this.getLocation(this.props.info.id);
     this.generateImageURL(carName);
   }
@@ -40,6 +43,17 @@ export default class Dashboard extends React.Component {
         console.log(res.data.imageURL);
         this.setState({
           imgSrc: res.data.imageURL
+        });
+      });
+  }
+
+  getEmission(id) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/co2emission?vehicleId=${id}`)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          emission: res.data.CO2emission
         });
       });
   }
@@ -71,7 +85,6 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
-    console.log(this.state.imgSrc);
     return (
       <div className="app-page">
         <div className="app-navbar">
@@ -79,7 +92,7 @@ export default class Dashboard extends React.Component {
             <span className="title-green-part">Green</span>icle
           </h1>
           <div className="nav-user">
-            <p>Hi, user@tesla.ca</p>
+            <p>Hi, user@{this.props.info.make.toLowerCase()}.ca</p>
             <a className="nav-logout" href="/">
               <b>Logout</b>
             </a>
@@ -178,7 +191,7 @@ export default class Dashboard extends React.Component {
                   <div className="small-col">
                     <p>Total CO2 emission (tonnes)</p>
                     <p className="metrics-val">
-                      <b>2.88</b>
+                      <b>{this.state.emission && this.state.emission}</b>
                     </p>
                     <p>
                       <i>Community average 2.70</i>
@@ -205,7 +218,12 @@ export default class Dashboard extends React.Component {
                       <b>0.6</b>
                     </p>
                     <p>
-                      <i>Plan a tree now!</i>
+                      <a
+                        className="nav-logout underlined"
+                        href="https://treecanada.ca/"
+                      >
+                        <i>Plant a tree now!</i>
+                      </a>
                     </p>
                   </div>{" "}
                 </div>
