@@ -14,9 +14,8 @@ export class Timeline extends React.Component {
   componentDidMount() {
     let n = Math.floor((Math.random() * this.props.pastDay) / 10 + 2);
     let markers = [];
-
     for (let i = 0; i < n; i++) {
-      var r = 500 / 111300, // = 100 meters
+      let r = 500 / 111300,
         y0 = this.props.lat,
         x0 = this.props.lng,
         u = Math.random(),
