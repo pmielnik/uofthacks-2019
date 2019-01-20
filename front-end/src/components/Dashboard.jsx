@@ -14,6 +14,8 @@ export default class Dashboard extends React.Component {
     super(props);
     this.state = {
       currentAddress: "",
+      last24HoursKM: Math.floor(Math.random() * 60 + 10),
+      lastWeekKM: Math.floor(Math.random() * 380 + 115),
       emission: 0,
       lightbulbHours: 0,
       treesToPlant: 0,
@@ -237,8 +239,12 @@ export default class Dashboard extends React.Component {
                 />
               </div>
               <div className="filtered-mileage">
-                You've driven <b>{this.state.odometer}</b> kilometers in the
-                past {this.state.filter}.
+                You've driven{" "}
+                <b>
+                  {this.state.filter === "24 hours" && this.state.last24HoursKM}
+                  {this.state.filter === "week" && this.state.lastWeekKM}
+                </b>{" "}
+                kilometers in the past {this.state.filter}.
               </div>
               <div className="timeline">
                 <p>
