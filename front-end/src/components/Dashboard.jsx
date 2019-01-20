@@ -53,7 +53,7 @@ export default class Dashboard extends React.Component {
       .then(res => {
         console.log(res.data);
         this.setState({
-          emission: res.data.CO2emission
+          emission: res.data.CO2emission.toFixed(2)
         });
       });
   }
