@@ -22,6 +22,10 @@
     text-decoration: none;
 }
 
+.nav-logout:hover {
+    color: #3aee78;
+}
+
 .nav-user p {
     margin-block-start: 0;
     margin-block-end: 0;
