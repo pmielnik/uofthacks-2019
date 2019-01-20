@@ -119,10 +119,11 @@ def co2emission():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['odometer']
+    odometer = vehicle.odometer()['data']['distance']
+    print(jsonify(odometer))
     info = vehicle.info()
-    make = info['make']
-    model = info['model']
+    make = info['make'].upper()
+    model = info['model'].upper()
     year = info['year']
     carId = str(year) + " " + make + " " + str(model)
 
@@ -141,10 +142,10 @@ def treestoplant():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['odometer']
+    odometer = vehicle.odometer()['data']['distance']
     info = vehicle.info()
-    make = info['make']
-    model = info['model']
+    make = info['make'].upper()
+    model = info['model'].upper()
     year = info['year']
     carId = str(year) + " " + make + " " + str(model)
 
@@ -160,10 +161,10 @@ def lightbulbs():
     
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['odometer']
+    odometer = vehicle.odometer()['data']['distance']
     info = vehicle.info()
-    make = info['make']
-    model = info['model']
+    make = info['make'].upper()
+    model = info['model'].upper()
     year = info['year']
     carId = str(year) + " " + make + " " + str(model)
 
@@ -218,10 +219,10 @@ def price():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['odometer']
+    odometer = vehicle.odometer()['data']['distance']
     info = vehicle.info()
-    make = info['make']
-    model = info['model']
+    make = info['make'].upper()
+    model = info['model'].upper()
     year = info['year']
     carId = str(year) + " " + make + " " + str(model)
 
