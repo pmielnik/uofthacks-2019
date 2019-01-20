@@ -14,18 +14,34 @@ export default class Dashboard extends React.Component {
     super(props);
     this.state = {
       odometer: 0,
+      imgSrc: null,
       filter: "24 hours",
       location: { lat: 0, lon: 0 }
     };
 
     this.getOdometer = this.getOdometer.bind(this);
     this.getLocation = this.getLocation.bind(this);
+    this.generateImageURL = this.generateImageURL.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidMount() {
+    let carName =
+      this.props.info.make + " " + this.props.model + " " + this.props.year;
     this.getOdometer(this.props.info.id);
     this.getLocation(this.props.info.id);
+    this.generateImageURL(carName);
+  }
+
+  generateImageURL(name) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/get-image?carModel=${name}`)
+      .then(res => {
+        console.log(res.data.imageURL);
+        this.setState({
+          imgSrc: res.data.imageURL
+        });
+      });
   }
 
   getOdometer(id) {
@@ -55,7 +71,7 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
-    console.log(this.state.location);
+    console.log(this.state.imgSrc);
     return (
       <div className="app-page">
         <div className="app-navbar">
@@ -83,11 +99,9 @@ export default class Dashboard extends React.Component {
                   {this.props.info.year}
                 </b>
               </p>
-              <img
-                className="car-avatar"
-                src="https://insideevs.com/wp-content/uploads/2017/12/IMG_20171214_164551-e1529516907468.jpg"
-                alt="Car"
-              />
+              {this.state.imgSrc && (
+                <img className="car-avatar" src={this.state.imgSrc} alt="Car" />
+              )}
 
               <table className="car-metrics">
                 <tbody>
