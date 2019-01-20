@@ -7,11 +7,16 @@ const style = {
 };
 export class Timeline extends React.Component {
   render() {
+    console.log(this.props);
     return (
       <Map
         google={this.props.google}
         style={style}
         zoom={14}
+        initialCenter={{
+          lat: this.props.lat,
+          lng: this.props.lng
+        }}
         fullscreenControl={false}
         scaleControl={false}
         streetViewControl={false}

@@ -10,22 +10,39 @@ import "./Dashboard.css";
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { odometer: 0, filter: "24 hours" };
+    this.state = {
+      odometer: 0,
+      filter: "24 hours",
+      location: { lat: 0, lon: 0 }
+    };
 
     this.getOdometer = this.getOdometer.bind(this);
+    this.getLocation = this.getLocation.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
 
   componentDidMount() {
     this.getOdometer(this.props.info.id);
+    this.getLocation(this.props.info.id);
   }
 
   getOdometer(id) {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/odometer?vehicleId=${id}`)
       .then(res => {
-        console.log(res.data);
-        this.setState({ odometer: res.data.data.distance.toFixed(0) });
+        this.setState({
+          odometer: res.data.data.distance.toFixed(0)
+        });
+      });
+  }
+
+  getLocation(id) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/location?vehicleId=${id}`)
+      .then(res => {
+        this.setState({
+          location: res.data.data
+        });
       });
   }
 
@@ -36,7 +53,7 @@ export default class Dashboard extends React.Component {
   }
 
   render() {
-    console.log(this.state.odometer);
+    console.log(this.state.location);
     return (
       <div className="app-page">
         <div className="app-navbar">
@@ -127,7 +144,12 @@ export default class Dashboard extends React.Component {
                 <p>
                   <b>Your places:</b>
                 </p>
-                <Timeline />
+                {this.state.location.latitude > 0 && (
+                  <Timeline
+                    lat={this.state.location.latitude}
+                    lng={this.state.location.longitude}
+                  />
+                )}
               </div>
             </div>
             <div className="eco-impact">Eco impact</div>
