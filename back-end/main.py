@@ -44,24 +44,21 @@ subscription_key = os.environ.get('BING_SUBSCRIPTION_KEY')
 assert subscription_key
 bingSearchUrl = "https://api.cognitive.microsoft.com/bing/v7.0/images/search"
 
-@app.route('/newuser', methods=['POST'])    # may need to change to args.get?
-def newuser():
-   username = request.form.get('username')
-   password = request.form.get('password')
-   vehicleId = request.form.get('vehicleId') #from smartcar?
+# @app.route('/newuser', methods=['POST'])    # may need to change to args.get?
+# def newuser():
+#    #username = request.form.get('username')
+#    #password = request.form.get('password')
+#    #vehicleId = request.form.get('vehicleId') #from smartcar?
 
-   userData=createUserData(username,password,vehicleId)
-   db_client.CreateItem(users_collection_link, userData)
+#    userData=createUserData(username,password,vehicleId)
+#    db_client.CreateItem(users_collection_link, userData)
 
-    #add user info to database
+#     #add user info to database
 
 @app.route('/login', methods=['GET'])
 def login():
     auth_url = client.get_auth_url()
     return redirect(auth_url)
-
-def returnMPG():
-    return
 
 
 @app.route('/exchange', methods=['GET'])
@@ -73,6 +70,9 @@ def exchange():
     # in a production app you'll want to store this in some kind of
     # persistent storage
     access = client.exchange_code(code)
+
+    # TODO: insert vehicleId to database here
+
     return '', 200
 
 
@@ -120,8 +120,13 @@ def co2emission():
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
+    info = vehicle.info()
+    make = info['make']
+    model = info['model']
+    year = info['year']
+    carId = year + " " + make + " " + model
 
-    mpg = getMPG(vehicleId)
+    mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
 
     return jsonify(CO2emission = emission)
@@ -133,8 +138,13 @@ def treestoplant():
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
+    info = vehicle.info()
+    make = info['make']
+    model = info['model']
+    year = info['year']
+    carId = year + " " + make + " " + model
 
-    mpg = getMPG(vehicleId)
+    mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
     trees = emission * 0.2
 
@@ -147,8 +157,13 @@ def lightbulbs():
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
+    info = vehicle.info()
+    make = info['make']
+    model = info['model']
+    year = info['year']
+    carId = year + " " + make + " " + model
 
-    mpg = getMPG(vehicleId)
+    mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
     lightbulbs = emission * 63
 
@@ -168,6 +183,45 @@ def getimage():
 
     return jsonify(imageURL = image)
 
+
+def resaleValue(mileage, price):
+    resale = 0.0
+
+    if mileage <= 20000:
+        resale=0.95*price
+
+    elif mileage > 200000 and mileage <= 30000:
+        resale=0.8*price
+
+    elif mileage > 30000 and mileage <= 40000: 
+        resale=0.75*price
+
+    elif mileage > 40000 and mileage <= 50000:
+        resale=0.7*price
+
+    elif mileage > 50000 and mileage <= 80000:
+        resale=0.6*price
+
+    elif mileage > 80000:
+        resale=0.4*price
+
+    return resale
+
+
+@app.route('/price', methods=['GET'])
+def price():
+    global access
+
+    vehicleId = request.args.get('vehicleId')
+    vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
+    odometer = vehicle.odometer()['data']
+    info = vehicle.info()
+    make = info['make']
+    model = info['model']
+    year = info['year']
+    carId = year + " " + make + " " + model
+
+    return jsonify(price = resaleValue(odometer, getPrice(carId)))
 
 # odometer update every 24hrs
 # location update every 5mins
@@ -222,6 +276,49 @@ def getMPG(carid):
         '2018 Volkswagen Golf' : '33.0',
         '2017 Volkswagen Beetle' : '28.0',
         '2018 Volkswagen Tiguan' : '22.0'
+    }
+    return (float)(cars[carid])
+
+def getPrice(carid):
+    cars={
+        '2018 Audi A4' : 40000,
+        '2017 Audi A8' : 58800,
+        '2017 Audi Q5' : 43800,
+        '2017 BMW 3 Series' : 41200,
+        '2017 BMW X5' : 70000,
+        '2018 BMW i3' : 50000,
+        '2018 Buick Verano' : 21000,
+        '2017 Buick LaCrosse' : 30000,
+        '2018 Buick Enclave' : 40000,
+        '2018 Cadillac ATS' : 40000,
+        '2017 Cadillac CTS' : 46000,
+        '2018 Cadillac Escalade' : 75000,
+        '2018 Chevrolet Traverse' : 30000,
+        '2018 Chevrolet Volt' : 39000,
+        '2017 Chevrolet Equinox' : 21000,
+        '2018 Chrysler Pacifica' : 36000,
+        '2017 Chrysler 300' : 42000,
+        '2015 Dodge Journey' : 25000,
+        '2017 Dodge Challenger' : 48000,
+        '2016 Dodge Charger' : 50000,
+        '2017 GMC Acadia' : 47000,
+        '2018 GMC Yukon' : 58000,
+        '2018 GMC Sierra' : 31000,
+        '2018 Jeep Wrangler' : 28200,
+        '2016 Jeep Cherokee' : 26000,
+        '2017 Jeep Compass' : 31000,
+        '2017 Lexus RX ' : 50000,
+        '2018 Lexus ES' : 40000,
+        '2017 Lexus IS' : 41000,
+        '2018 RAM 2500' : 34000,
+        '2017 RAM 1500' : 27600,
+        '2019 RAM 3500' : 37000,
+        '2017 Tesla Model X' : 80000,
+        '2018 Tesla Model 3' : 49000,
+        '2016 Tesla Model S' : 71000,
+        '2018 Volkswagen Golf' : 27000,
+        '2017 Volkswagen Beetle' : 30000,
+        '2018 Volkswagen Tiguan' : 35000
     }
     return (float)(cars[carid])
 
