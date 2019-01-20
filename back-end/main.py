@@ -119,7 +119,7 @@ def co2emission():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']
+    odometer = vehicle.odometer()['data']['odometer']
     info = vehicle.info()
     make = info['make']
     model = info['model']
@@ -141,7 +141,7 @@ def treestoplant():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']
+    odometer = vehicle.odometer()['data']['odometer']
     info = vehicle.info()
     make = info['make']
     model = info['model']
@@ -160,7 +160,7 @@ def lightbulbs():
     
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']
+    odometer = vehicle.odometer()['data']['odometer']
     info = vehicle.info()
     make = info['make']
     model = info['model']
@@ -218,7 +218,7 @@ def price():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']
+    odometer = vehicle.odometer()['data']['odometer']
     info = vehicle.info()
     make = info['make']
     model = info['model']
