@@ -124,7 +124,9 @@ export default class Dashboard extends React.Component {
                 past {this.state.filter}.
               </div>
               <div className="timeline">
-                <b>Your timeline:</b>
+                <p>
+                  <b>Your places:</b>
+                </p>
                 <Timeline />
               </div>
             </div>

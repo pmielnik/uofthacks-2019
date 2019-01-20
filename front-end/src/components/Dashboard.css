@@ -8,7 +8,7 @@
 
 .app-logo {
     font-size: calc(20px + 3vmin);
-    padding-left: 25px;
+    padding-left: 10%;
 }
 
 .nav-user {
@@ -153,10 +153,10 @@
 
 .filtered-mileage {
     text-align: left;
-    padding-top: 15%;
+    padding-top: 10%;
 }
 
 .timeline {
-    padding-top: 10%;
     text-align: left;
+    padding-top: 5%;
 }
