@@ -13,7 +13,10 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currentAddress: "",
       emission: 0,
+      lightbulbHours: 0,
+      treesToPlant: 0,
       odometer: 0,
       imgSrc: null,
       filter: "24 hours",
@@ -21,8 +24,10 @@ export default class Dashboard extends React.Component {
     };
 
     this.getEmission = this.getEmission.bind(this);
+    this.getLightBulb = this.getLightBulb.bind(this);
     this.getOdometer = this.getOdometer.bind(this);
     this.getLocation = this.getLocation.bind(this);
+    this.getTrees = this.getTrees.bind(this);
     this.generateImageURL = this.generateImageURL.bind(this);
     this.setFilter = this.setFilter.bind(this);
   }
@@ -32,6 +37,8 @@ export default class Dashboard extends React.Component {
       this.props.info.make + " " + this.props.model + " " + this.props.year;
     this.getOdometer(this.props.info.id);
     this.getEmission(this.props.info.id);
+    this.getTrees(this.props.info.id);
+    this.getLightBulb(this.props.info.id);
     this.getLocation(this.props.info.id);
     this.generateImageURL(carName);
   }
@@ -58,6 +65,28 @@ export default class Dashboard extends React.Component {
       });
   }
 
+  getLightBulb(id) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/lightbulbs?vehicleId=${id}`)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          lightbulbHours: res.data.LightBulbHours.toFixed(2)
+        });
+      });
+  }
+
+  getTrees(id) {
+    return axios
+      .get(`${process.env.REACT_APP_SERVER}/treestoplant?vehicleId=${id}`)
+      .then(res => {
+        console.log(res.data);
+        this.setState({
+          treesToPlant: res.data.TreesToPlant.toFixed(2)
+        });
+      });
+  }
+
   getOdometer(id) {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/odometer?vehicleId=${id}`)
@@ -72,9 +101,35 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/location?vehicleId=${id}`)
       .then(res => {
+        this.setState(
+          {
+            location: res.data.data
+          },
+          () => {
+            this.getAddress();
+          }
+        );
+      });
+  }
+
+  getAddress() {
+    return axios
+      .get(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+          this.state.location.latitude
+        },${this.state.location.longitude}&key=${
+          process.env.REACT_APP_GOOGLE_MAPS_API_KEY
+        }
+    `
+      )
+      .then(res => {
+        console.log("ADDRESS: " + JSON.stringify(res.data));
         this.setState({
-          location: res.data.data
+          currentAddress: res.data.results[0].formatted_address
         });
+      })
+      .catch(err => {
+        console.log("ERROR: " + err);
       });
   }
 
@@ -128,7 +183,7 @@ export default class Dashboard extends React.Component {
                     <td className="metric-title">
                       <b>Current location</b>
                     </td>
-                    <td className="metric">24 Valley Dr., CA</td>
+                    <td className="metric">{this.state.currentAddress}</td>
                   </tr>
                   <tr>
                     <td className="metric-title">
@@ -194,7 +249,7 @@ export default class Dashboard extends React.Component {
                       <b>{this.state.emission && this.state.emission}</b>
                     </p>
                     <p>
-                      <i>Community average 2.70</i>
+                      <i>Community average 50.40</i>
                     </p>
                   </div>
                 </div>
@@ -203,10 +258,12 @@ export default class Dashboard extends React.Component {
                   <div className="small-col">
                     <p>Light bulb (hours)</p>
                     <p className="metrics-val">
-                      <b>181.8</b>
+                      <b>
+                        {this.state.lightbulbHours && this.state.lightbulbHours}
+                      </b>
                     </p>
                     <p>
-                      <i>Community average 133</i>
+                      <i>Community average 857.65</i>
                     </p>
                   </div>
                 </div>
@@ -215,7 +272,9 @@ export default class Dashboard extends React.Component {
                   <div className="small-col">
                     <p>Trees to offset</p>
                     <p className="metrics-val">
-                      <b>0.6</b>
+                      <b>
+                        {this.state.treesToPlant && this.state.treesToPlant}
+                      </b>
                     </p>
                     <p>
                       <a
