@@ -13,7 +13,7 @@ function TimeFilter(props) {
         id={props.id}
         defaultChecked={props.checked}
       />
-      <label className="time-filter" for={props.id}>
+      <label className="time-filter" htmlFor={props.id}>
         {props.title}
       </label>
     </React.Fragment>
