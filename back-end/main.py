@@ -17,7 +17,7 @@ CORS(app)
 #print("connecting to database.....")
 
 HOST ='https://greenicle.documents.azure.com:443/'
-MASTER_KEY = 'G0Mmi0w1guwj0o34EfJnpadk8qf9DFIP2kM3rMbJ5KBP2RX1WBgH3EF2SpRnHvDXSmQsPTQTMCjeVNWR7oWKtg=='
+MASTER_KEY = os.environ.get('DATABASE_MASTER_KEY')
 DATABASE_ID = 'greenicle'
 CARS_COLLECTION_ID = 'cars'
 USERS_COLLECTION_ID = 'users'
@@ -40,7 +40,7 @@ client = smartcar.AuthClient(
 )
 
 # Bing search key
-subscription_key = 'cdcce10aafc748929f842db03f1c0390'
+subscription_key = os.environ.get('BING_SUBSCRIPTION_KEY')
 assert subscription_key
 bingSearchUrl = "https://api.cognitive.microsoft.com/bing/v7.0/images/search"
 
