@@ -124,7 +124,7 @@ def co2emission():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = year + " " + make + " " + model
+    carId = str(year) + " " + make + " " + str(model)
 
     mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
@@ -135,6 +135,10 @@ def co2emission():
 def treestoplant():
     global access
     
+    year = 2018
+    make = "Audi"
+    model = "A4"
+
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
     odometer = vehicle.odometer()['data']
@@ -142,7 +146,7 @@ def treestoplant():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = str(year) + " " + make + " " + model
+    carId = str(year) + " " + make + " " + str(model)
 
     mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
@@ -161,7 +165,7 @@ def lightbulbs():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = str(year) + " " + make + " " + model
+    carId = str(year) + " " + make + " " + str(model)
 
     mpg = getMPG(carId)
     emission = (odometer/mpg*8887)/(1000000.0)
@@ -219,7 +223,7 @@ def price():
     make = info['make']
     model = info['model']
     year = info['year']
-    carId = str(year) + " " + make + " " + model
+    carId = str(year) + " " + make + " " + str(model)
 
     return jsonify(price = resaleValue(odometer, getPrice(carId)))
 
