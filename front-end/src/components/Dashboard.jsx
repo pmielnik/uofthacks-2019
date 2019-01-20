@@ -1,6 +1,9 @@
 import React from "react";
 import axios from "axios";
 import TimeFilter from "./TimeFilter";
+
+import GoogleMaps from "./GoogleMaps";
+
 import Rating from "../assets/rating.png";
 import "./Dashboard.css";
 
@@ -120,7 +123,9 @@ export default class Dashboard extends React.Component {
                 You've driven <b>{this.state.odometer}</b> kilometers in the
                 past {this.state.filter}.
               </div>
-              <div className="timeline">Timeline</div>
+              <div className="timeline">
+                <GoogleMaps />
+              </div>
             </div>
             <div className="eco-impact">Eco impact</div>
           </div>
