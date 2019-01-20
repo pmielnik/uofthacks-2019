@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from "google-maps-react";
 
 const style = {
-  width: "30%",
+  width: "33%",
   height: "50%"
 };
 export class Timeline extends React.Component {
