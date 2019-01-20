@@ -2,7 +2,7 @@ import React from "react";
 import axios from "axios";
 import TimeFilter from "./TimeFilter";
 
-import GoogleMaps from "./GoogleMaps";
+import Timeline from "./Timeline";
 
 import Rating from "../assets/rating.png";
 import "./Dashboard.css";
@@ -124,7 +124,8 @@ export default class Dashboard extends React.Component {
                 past {this.state.filter}.
               </div>
               <div className="timeline">
-                <GoogleMaps />
+                <b>Your timeline:</b>
+                <Timeline />
               </div>
             </div>
             <div className="eco-impact">Eco impact</div>
