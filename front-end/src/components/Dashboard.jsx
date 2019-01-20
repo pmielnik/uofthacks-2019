@@ -52,7 +52,6 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/price?vehicleId=${id}`)
       .then(res => {
-        console.log(res.data);
         this.setState({
           resaleValue: res.data.price.toFixed(0)
         });
@@ -63,7 +62,6 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/get-image?carModel=${name}`)
       .then(res => {
-        console.log(res.data.imageURL);
         this.setState({
           imgSrc: res.data.imageURL
         });
@@ -74,7 +72,6 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/co2emission?vehicleId=${id}`)
       .then(res => {
-        console.log(res.data);
         this.setState({
           emission: res.data.CO2emission.toFixed(2)
         });
@@ -85,7 +82,6 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/lightbulbs?vehicleId=${id}`)
       .then(res => {
-        console.log(res.data);
         this.setState({
           lightbulbHours: res.data.LightBulbHours.toFixed(2)
         });
@@ -96,7 +92,6 @@ export default class Dashboard extends React.Component {
     return axios
       .get(`${process.env.REACT_APP_SERVER}/treestoplant?vehicleId=${id}`)
       .then(res => {
-        console.log(res.data);
         this.setState({
           treesToPlant: res.data.TreesToPlant.toFixed(2)
         });
@@ -139,7 +134,6 @@ export default class Dashboard extends React.Component {
     `
       )
       .then(res => {
-        console.log("ADDRESS: " + JSON.stringify(res.data));
         this.setState({
           currentAddress: res.data.results[0].formatted_address
         });
@@ -254,6 +248,8 @@ export default class Dashboard extends React.Component {
                   <Timeline
                     lat={this.state.location.latitude}
                     lng={this.state.location.longitude}
+                    pastDay={this.state.last24HoursKM}
+                    pastWeek={this.state.lastWeekKM}
                   />
                 )}
               </div>
