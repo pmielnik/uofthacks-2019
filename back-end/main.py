@@ -194,22 +194,22 @@ def getimage():
 def resaleValue(mileage, price):
     resale = 0.0
 
-    if mileage <= 20000:
+    if mileage <= 50000:
         resale=0.95*price
 
-    elif mileage > 200000 and mileage <= 30000:
+    elif mileage > 50000 and mileage <= 100000:
         resale=0.8*price
 
-    elif mileage > 30000 and mileage <= 40000: 
+    elif mileage > 100000 and mileage <= 150000: 
         resale=0.75*price
 
-    elif mileage > 40000 and mileage <= 50000:
+    elif mileage > 150000 and mileage <= 200000:
         resale=0.7*price
 
-    elif mileage > 50000 and mileage <= 80000:
+    elif mileage > 200000 and mileage <= 250000:
         resale=0.6*price
 
-    elif mileage > 80000:
+    elif mileage > 250000:
         resale=0.4*price
 
     return resale
@@ -221,7 +221,7 @@ def price():
 
     vehicleId = request.args.get('vehicleId')
     vehicle = smartcar.Vehicle(vehicleId, access['access_token'])
-    odometer = vehicle.odometer()['data']['distance'] * KM_TO_MILES
+    odometer = vehicle.odometer()['data']['distance'] 
     info = vehicle.info()
     make = info['make'].upper()
     model = info['model'].upper()
